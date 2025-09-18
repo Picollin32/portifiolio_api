@@ -1,51 +1,46 @@
-# app/midias/controller.py
-from fastapi import APIRouter, HTTPException
-from fastapi import APIRouter, HTTPException, status
-from .midia_model import MidiaCreate, MidiaPublic, MidiaUpdate
+# midias/midia_controller.py
 
-# 1. Cria um roteador específico para usuários
-router = APIRouter(
-    prefix="/midias",       # Todas as rotas aqui começarão com /midias
-    tags=["Midias"]         # Agrupa as rotas no Swagger
-)
+from sqlalchemy.orm import Session
+from fastapi import APIRouter, Depends, status
+from typing import List
+from database import SessionLocal
+from . import midia_service, midia_model
 
-# Lista FAKE para simular um banco de dados
-fake_db = []
+router = APIRouter(prefix="/midias", tags=["Midias"])
 
-# 2. Define o endpoint para criar um usuário
-@router.post("/save", response_model=MidiaPublic)
-def create_midia(midia: MidiaCreate):
-    # midia aqui é um objeto Pydantic, com dados já validados!
-    new_midia_data = midia.model_dump()
-    new_midia_data["id"] = len(fake_db) + 1
+# Esta função é a nossa "Injeção de Dependência".
+# O FastAPI vai chamá-la para cada requisição que precisar de uma sessão com o banco.
+# A palavra 'yield' entrega a sessão para a rota e, quando a rota termina,
+# o código após o 'yield' (db.close()) é executado, garantindo que a conexão seja fechada.
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
-    new_midia = MidiaPublic(**new_midia_data)
-    fake_db.append(new_midia)
+@router.post("/", response_model=midia_model.MidiaPublic, status_code=status.HTTP_201_CREATED)
+def create_midia(midia: midia_model.MidiaCreate, db: Session = Depends(get_db)):
+    """Endpoint para criar um novo usuário. Recebe os dados validados (midia)
+    e a sessão do banco (db) através da injeção de dependência."""
+    return midia_service.create_new_midia(db=db, midia=midia)
 
-    return new_midia 
-@router.get("/", response_model=list[MidiaPublic])
-def list_midias():
-    # Converte os dicionários do 'banco de dados' para o modelo público
-    return [MidiaPublic(**midia_data) for midia_data in fake_db.values()]
+@router.get("/", response_model=List[midia_model.MidiaPublic])
+def read_midias(db: Session = Depends(get_db)):
+    """Endpoint para listar todos os usuários."""
+    return midia_service.get_all_midias(db)
 
-@router.put("/{midia_id}", response_model=MidiaPublic)
-def update_midia(midia_id: int, midia_update: MidiaUpdate):
-    if midia_id not in fake_db:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Midia not found")
+@router.get("/{midia_id}", response_model=midia_model.MidiaPublic)
+def read_midia(midia_id: int, db: Session = Depends(get_db)):
+    """Endpoint para buscar um usuário pelo ID."""
+    return midia_service.get_midia_by_id(db, midia_id=midia_id)
 
-    stored_midia_data = fake_db[midia_id]
-    update_data = midia_update.model_dump(exclude_unset=True) # Apenas campos enviados
+@router.put("/{midia_id}", response_model=midia_model.MidiaPublic)
+def update_midia(midia_id: int, midia: midia_model.MidiaUpdate, db: Session = Depends(get_db)):
+    """Endpoint para atualizar um usuário."""
+    return midia_service.update_existing_midia(db=db, midia_id=midia_id, midia_in=midia)
 
-    updated_midia = stored_midia_data.copy()
-    updated_midia.update(update_data)
-    fake_db[midia_id] = updated_midia
-
-    return MidiaPublic(**updated_midia)
-
-@router.delete("/{midia_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_midia(midia_id: int):
-    if midia_id not in fake_db:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Midia not found")
-
-    del fake_db[midia_id]
-    # Com status 204, a resposta não deve ter corpo. O FastAPI cuida disso.
+@router.delete("/{midia_id}", response_model=midia_model.MidiaPublic)
+def delete_midia(midia_id: int, db: Session = Depends(get_db)):
+    """Endpoint para deletar um usuário."""
+    return midia_service.delete_midia_by_id(db=db, midia_id=midia_id)
