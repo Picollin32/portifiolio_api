@@ -3,11 +3,19 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+import os
+
+APP_PROFILE = os.getenv("APP_PROFILE", "DEV")
+
+if APP_PROFILE == "DEV":
+    SQLALCHEMY_DATABASE_URL = "postgresql://postgres:123456@localhost/portifolio_db"
+else:
+    SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL")
 
 # 1. Define a string de conexão com o banco PostgreSQL.
 #    Formato: "postgresql://<user>:<password>@<host>/<dbname>"
 #    Substitua com suas credenciais. É uma boa prática usar variáveis de ambiente aqui.
-SQLALCHEMY_DATABASE_URL = "postgresql://postgres:123456@localhost/portifolio_db"
+
 
 # 2. Cria a "engine" do SQLAlchemy, que é o ponto de entrada para o banco de dados.
 #    Ela gerencia as conexões com o banco.
