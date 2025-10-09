@@ -18,7 +18,8 @@ class User(Base):
     # Chave estrangeira que aponta para a tabela 'roles'
     role_id = Column(Integer, ForeignKey("roles.id"))
     # Cria a relação para que possamos acessar o objeto Role a partir de um User
-    role = relationship("Role")
+    # eager loading para evitar problemas de lazy loading após commit
+    role = relationship("Role", lazy="joined")
 
 # ==================================
 # SCHEMAS (Pydantic)
@@ -33,6 +34,10 @@ class UserCreate(BaseModel):
 class UserUpdate(BaseModel):
     full_name: str | None = Field(default=None, min_length=3)
     profile_image_url: str | None = None
+    password: str | None = Field(default=None, min_length=8)
+
+class PasswordReset(BaseModel):
+    new_password: str = Field(min_length=8)
 
 class UserPublic(BaseModel):
     model_config = ConfigDict(from_attributes=True)

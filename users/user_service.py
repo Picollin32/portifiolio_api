@@ -26,4 +26,13 @@ def update_existing_user(db: Session, user_id: int, user_in: user_model.UserUpda
 
 def delete_user_by_id(db: Session, user_id: int):
     db_user = get_user_by_id(db, user_id)
-    return user_repository.delete_user(db=db, db_user=db_user)
+    user_repository.delete_user(db=db, db_user=db_user)
+    # Não retorna nada, pois o controller já lidou com a resposta
+    return None
+
+def reset_user_password(db: Session, user_id: int, new_password: str):
+    """Permite que admin redefina a senha de um usuário."""
+    db_user = get_user_by_id(db, user_id)
+    # Cria um objeto UserUpdate apenas com a senha
+    user_update = user_model.UserUpdate(password=new_password)
+    return user_repository.update_user(db=db, db_user=db_user, user_in=user_update)

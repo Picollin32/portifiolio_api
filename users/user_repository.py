@@ -45,4 +45,4 @@ def update_user(db: Session, db_user: user_model.User, user_in: user_model.UserU
 def delete_user(db: Session, db_user: user_model.User):
     db.delete(db_user)
     db.commit()
-    return db_user
+    # Não precisa retornar o objeto deletado
