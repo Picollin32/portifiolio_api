@@ -34,7 +34,7 @@ def create_midia(db: Session, midia: midia_model.MidiaCreate):
 
     # Cria uma instância do modelo SQLAlchemy com os dados do schema Pydantic.
     # É aqui que os dados da API são transformados em um objeto que pode ser salvo no banco.
-    db_midia = midia_model.Midia(email=midia.email, hashed_password=hashed_password, full_name=midia.full_name)
+    db_midia = midia_model.Midia(email=midia.email, hashed_password=hashed_password, full_name=midia.full_name, image=midia.image)
 
     db.add(db_midia)      # Adiciona o novo objeto à sessão (área de preparação).
     db.commit()         # Salva (commita) as mudanças no banco de dados.

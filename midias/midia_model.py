@@ -16,6 +16,7 @@ class Midia(Base):
     email = Column(String, unique=True, index=True) # E-mail deve ser único
     hashed_password = Column(String) # Armazenaremos a senha "hasheada"
     full_name = Column(String, index=True, nullable=True) # Nome pode ser nulo
+    image = Column(String, nullable=True)  # Campo para armazenar URL/data URI da imagem
 
 # ==================================
 # SCHEMAS (Pydantic) - O CONTRATO DA API
@@ -27,12 +28,14 @@ class MidiaCreate(BaseModel):
     email: EmailStr  # Valida o formato do e-mail
     password: str = Field(min_length=8)
     full_name: str | None = Field(default=None, min_length=3)
+    image: str | None = None
 
 # Schema para os dados que o cliente envia ao ATUALIZAR um usuário
 class MidiaUpdate(BaseModel):
     email: EmailStr | None = None
     password: str | None = Field(default=None, min_length=8)
     full_name: str | None = Field(default=None, min_length=3)
+    image: str | None = None
 
 # Schema para os dados que a API RETORNA ao cliente (público)
 # NUNCA inclua a senha ou outros dados sensíveis aqui!
@@ -40,3 +43,4 @@ class MidiaPublic(BaseModel):
     id: int
     email: EmailStr
     full_name: str | None = None
+    image: str | None = None
