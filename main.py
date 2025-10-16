@@ -30,8 +30,8 @@ if APP_PROFILE == "PROG":
     app.add_middleware(
         CORSMiddleware,
         allow_origins=[
-            "https://programacaoiii-front.onrender.com",
-            "https://programacaoiii-front.onrender.com/",
+            "https://portifiolio-api.onrender.com",
+            "https://portifiolio-api.onrender.com/",
         ],
         allow_credentials=True,
         allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
