@@ -32,6 +32,7 @@ class UserCreate(BaseModel):
     role_id: int = Field(description="ID do role a ser associado ao usuário")
 
 class UserUpdate(BaseModel):
+    email: EmailStr | None = None
     full_name: str | None = Field(default=None, min_length=3)
     profile_image_url: str | None = None
     password: str | None = Field(default=None, min_length=8)

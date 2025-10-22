@@ -1,0 +1,110 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "FastAPI: Run Dev Server",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "uvicorn",
+            "args": [
+                "main:app",
+                "--reload",
+                "--host", "0.0.0.0",
+                "--port", "8000"
+            ],
+            "jinja": true,
+            "justMyCode": false,
+            "env": {
+                "APP_PROFILE": "DEV"
+            },
+            "console": "integratedTerminal",
+            "cwd": "d:/Projetos/portifiolio_api",
+            "python": "C:/Users/brank/AppData/Local/Packages/PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0/LocalCache/Local/pypoetry/Cache/virtualenvs/portifiolio-api-5VRVLFZW-py3.11/Scripts/python.exe"
+        },
+        {
+            "name": "Flutter: Run Web",
+            "type": "dart",
+            "request": "launch",
+            "program": "d:/Projetos/portifolio_front/lib/main.dart",
+            "cwd": "d:/Projetos/portifolio_front",
+            "args": [
+                "-d",
+                "chrome"
+            ]
+        },
+        {
+            "name": "FastAPI: Run Production",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "uvicorn",
+            "args": [
+                "main:app",
+                "--host", "0.0.0.0",
+                "--port", "8000",
+                "--workers", "4"
+            ],
+            "jinja": true,
+            "justMyCode": false,
+            "env": {
+                "APP_PROFILE": "PROD"
+            },
+            "console": "integratedTerminal",
+            "cwd": "d:/Projetos/portifiolio_api",
+            "python": "C:/Users/brank/AppData/Local/Packages/PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0/LocalCache/Local/pypoetry/Cache/virtualenvs/portifiolio-api-5VRVLFZW-py3.11/Scripts/python.exe"
+        },
+        {
+            "name": "Python: Current File",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env": {
+                "APP_PROFILE": "DEV"
+            },
+            "cwd": "d:/Projetos/portifiolio_api",
+            "python": "C:/Users/brank/AppData/Local/Packages/PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0/LocalCache/Local/pypoetry/Cache/virtualenvs/portifiolio-api-5VRVLFZW-py3.11/Scripts/python.exe"
+        },
+        {
+            "name": "Python: Initialize Database",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "d:/Projetos/portifiolio_api/init_db.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env": {
+                "APP_PROFILE": "DEV"
+            },
+            "cwd": "d:/Projetos/portifiolio_api",
+            "python": "C:/Users/brank/AppData/Local/Packages/PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0/LocalCache/Local/pypoetry/Cache/virtualenvs/portifiolio-api-5VRVLFZW-py3.11/Scripts/python.exe"
+        },
+        {
+            "name": "Python: Demo Patterns",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "d:/Projetos/portifiolio_api/demo_patterns.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env": {
+                "APP_PROFILE": "DEV"
+            },
+            "cwd": "d:/Projetos/portifiolio_api",
+            "python": "C:/Users/brank/AppData/Local/Packages/PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0/LocalCache/Local/pypoetry/Cache/virtualenvs/portifiolio-api-5VRVLFZW-py3.11/Scripts/python.exe"
+        }
+    ],
+    "compounds": [
+        {
+            "name": "🚀 Full Stack: Backend + Frontend",
+            "configurations": [
+                "FastAPI: Run Dev Server",
+                "Flutter: Run Web"
+            ],
+            "presentation": {
+                "hidden": false,
+                "group": "fullstack",
+                "order": 1
+            },
+            "stopAll": true
+        }
+    ]
+}
