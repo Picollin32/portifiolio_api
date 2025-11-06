@@ -1,46 +1,239 @@
 # midias/midia_controller.py
+"""
+Presentation Layer (Controller): Endpoints da API para Midias.
+
+Responsável por:
+- Receber requisições HTTP
+- Validar entrada (via Pydantic)
+- Delegar lógica de negócio para a camada de serviço
+- Retornar respostas HTTP adequadas
+"""
 
 from sqlalchemy.orm import Session
-from fastapi import APIRouter, Depends, status
-from typing import List
-from database import SessionLocal
+from fastapi import APIRouter, Depends, status, Query
+from typing import List, Optional, Dict
+from database import get_db
 from . import midia_service, midia_model
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from midias_config import get_tipos_midia, get_status_por_tipo, get_generos_por_tipo
 
 router = APIRouter(prefix="/midias", tags=["Midias"])
 
-# Esta função é a nossa "Injeção de Dependência".
-# O FastAPI vai chamá-la para cada requisição que precisar de uma sessão com o banco.
-# A palavra 'yield' entrega a sessão para a rota e, quando a rota termina,
-# o código após o 'yield' (db.close()) é executado, garantindo que a conexão seja fechada.
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
-@router.post("/", response_model=midia_model.MidiaPublic, status_code=status.HTTP_201_CREATED)
-def create_midia(midia: midia_model.MidiaCreate, db: Session = Depends(get_db)):
-    """Endpoint para criar um novo usuário. Recebe os dados validados (midia)
-    e a sessão do banco (db) através da injeção de dependência."""
+@router.post(
+    "/",
+    response_model=midia_model.MidiaPublic,
+    status_code=status.HTTP_201_CREATED,
+    summary="Criar nova mídia",
+    description="Endpoint para cadastrar uma nova mídia (jogo, filme, série, livro, etc.) no portfólio."
+)
+def create_midia(
+    midia: midia_model.MidiaCreate,
+    db: Session = Depends(get_db)
+) -> midia_model.MidiaPublic:
+    """
+    Cria uma nova mídia no sistema.
+    
+    - **titulo**: Título da mídia
+    - **tipo**: Tipo (Jogo, Filme, Série, Livro, etc.)
+    - **genero**: Gênero (opcional)
+    - **ano**: Ano de lançamento (opcional)
+    - **status**: Status (Zerado, Em andamento, etc.) (opcional)
+    - **avaliacao**: Avaliação de 0 a 5 (opcional)
+    - **capa**: Caminho ou URL da imagem de capa (opcional)
+    """
     return midia_service.create_new_midia(db=db, midia=midia)
 
-@router.get("/", response_model=List[midia_model.MidiaPublic])
-def read_midias(db: Session = Depends(get_db)):
-    """Endpoint para listar todos os usuários."""
-    return midia_service.get_all_midias(db)
 
-@router.get("/{midia_id}", response_model=midia_model.MidiaPublic)
-def read_midia(midia_id: int, db: Session = Depends(get_db)):
-    """Endpoint para buscar um usuário pelo ID."""
+@router.get(
+    "/",
+    response_model=List[midia_model.MidiaPublic],
+    summary="Listar todas as mídias",
+    description="Retorna lista de todas as mídias cadastradas, com filtros opcionais por tipo e status."
+)
+def read_midias(
+    tipo: Optional[str] = Query(None, description="Filtrar por tipo (Jogo, Filme, Série, etc.)"),
+    status_filter: Optional[str] = Query(None, alias="status", description="Filtrar por status (Zerado, Em andamento, etc.)"),
+    db: Session = Depends(get_db)
+) -> List[midia_model.MidiaPublic]:
+    """
+    Lista todas as mídias do sistema.
+    
+    **Filtros opcionais**:
+    - tipo: Filtrar por tipo de mídia
+    - status: Filtrar por status
+    """
+    if tipo:
+        return midia_service.get_midias_by_tipo(db, tipo=tipo)
+    elif status_filter:
+        return midia_service.get_midias_by_status(db, status=status_filter)
+    else:
+        return midia_service.get_all_midias(db)
+
+
+@router.get(
+    "/{midia_id}",
+    response_model=midia_model.MidiaPublic,
+    summary="Buscar mídia por ID",
+    description="Retorna os dados de uma mídia específica."
+)
+def read_midia(
+    midia_id: int,
+    db: Session = Depends(get_db)
+) -> midia_model.MidiaPublic:
+    """
+    Busca uma mídia pelo ID.
+    
+    - **midia_id**: ID da mídia a buscar
+    """
     return midia_service.get_midia_by_id(db, midia_id=midia_id)
 
-@router.put("/{midia_id}", response_model=midia_model.MidiaPublic)
-def update_midia(midia_id: int, midia: midia_model.MidiaUpdate, db: Session = Depends(get_db)):
-    """Endpoint para atualizar um usuário."""
+
+@router.put(
+    "/{midia_id}",
+    response_model=midia_model.MidiaPublic,
+    summary="Atualizar mídia",
+    description="Atualiza os dados de uma mídia existente."
+)
+def update_midia(
+    midia_id: int,
+    midia: midia_model.MidiaUpdate,
+    db: Session = Depends(get_db)
+) -> midia_model.MidiaPublic:
+    """
+    Atualiza os dados de uma mídia.
+    
+    - **midia_id**: ID da mídia a atualizar
+    - Todos os campos são opcionais
+    """
     return midia_service.update_existing_midia(db=db, midia_id=midia_id, midia_in=midia)
 
-@router.delete("/{midia_id}", response_model=midia_model.MidiaPublic)
-def delete_midia(midia_id: int, db: Session = Depends(get_db)):
-    """Endpoint para deletar um usuário."""
-    return midia_service.delete_midia_by_id(db=db, midia_id=midia_id)
+
+@router.delete(
+    "/{midia_id}",
+    response_model=midia_model.MidiaPublic,
+    summary="Deletar mídia",
+    description="Remove uma mídia do sistema."
+)
+def delete_midia(
+    midia_id: int,
+    db: Session = Depends(get_db)
+) -> midia_model.MidiaPublic:
+    """
+    Remove uma mídia do sistema.
+    
+    - **midia_id**: ID da mídia a remover
+    
+    Retorna os dados da mídia removida.
+    """
+    # Primeiro busca a mídia para retornar os dados antes de deletar
+    db_midia = midia_service.get_midia_by_id(db, midia_id=midia_id)
+    
+    # Cria uma cópia dos dados para retornar
+    midia_data = midia_model.MidiaPublic(
+        id=db_midia.id,
+        titulo=db_midia.titulo,
+        tipo=db_midia.tipo,
+        genero=db_midia.genero,
+        ano=db_midia.ano,
+        status=db_midia.status,
+        avaliacao=db_midia.avaliacao,
+        capa=db_midia.capa
+    )
+    
+    # Agora deleta a mídia
+    midia_service.delete_midia_by_id(db=db, midia_id=midia_id)
+    
+    # Retorna os dados salvos
+    return midia_data
+
+
+# ========================================
+# Endpoints de Configuração
+# ========================================
+
+@router.get(
+    "/tipos",
+    response_model=List[str],
+    summary="Listar tipos de mídia disponíveis",
+    description="Retorna lista de todos os tipos de mídia suportados pelo sistema."
+)
+def get_tipos() -> List[str]:
+    """
+    Lista todos os tipos de mídia disponíveis.
+    
+    Tipos suportados: Jogo, Filme, Série, Livro, Anime, Mangá, HQ/Comic, Podcast
+    """
+    return get_tipos_midia()
+
+
+@router.get(
+    "/status/{tipo}",
+    response_model=List[str],
+    summary="Listar status disponíveis por tipo",
+    description="Retorna lista de status sugeridos para um tipo específico de mídia."
+)
+def get_status_options(tipo: str) -> List[str]:
+    """
+    Lista os status disponíveis para um tipo de mídia.
+    
+    - **tipo**: Tipo da mídia (Jogo, Filme, Série, etc.)
+    
+    Retorna lista de status sugeridos ou lista vazia se o tipo não for encontrado.
+    """
+    return get_status_por_tipo(tipo)
+
+
+@router.get(
+    "/generos/{tipo}",
+    response_model=List[str],
+    summary="Listar gêneros comuns por tipo",
+    description="Retorna lista de gêneros comuns para um tipo específico de mídia."
+)
+def get_generos_options(tipo: str) -> List[str]:
+    """
+    Lista os gêneros comuns para um tipo de mídia.
+    
+    - **tipo**: Tipo da mídia (Jogo, Filme, Série, etc.)
+    
+    Retorna lista de gêneros comuns ou lista vazia se o tipo não for encontrado.
+    """
+    return get_generos_por_tipo(tipo)
+
+
+@router.get(
+    "/config",
+    response_model=Dict,
+    summary="Obter toda a configuração de mídias",
+    description="Retorna um dicionário com tipos, status e gêneros disponíveis."
+)
+def get_config() -> Dict:
+    """
+    Retorna toda a configuração de mídias de uma vez.
+    
+    Útil para popular formulários e dropdowns no frontend.
+    
+    Retorna:
+    ```json
+    {
+        "tipos": ["Jogo", "Filme", ...],
+        "status_por_tipo": {
+            "Jogo": ["Zerado", "Platinado", ...],
+            "Filme": ["Assistido", ...]
+        },
+        "generos_por_tipo": {
+            "Jogo": ["Action/Adventure", "RPG", ...],
+            "Filme": ["Ação", "Drama", ...]
+        }
+    }
+    ```
+    """
+    from midias_config import TIPOS_MIDIA, STATUS_POR_TIPO, GENEROS_COMUNS
+    
+    return {
+        "tipos": TIPOS_MIDIA,
+        "status_por_tipo": STATUS_POR_TIPO,
+        "generos_por_tipo": GENEROS_COMUNS
+    }

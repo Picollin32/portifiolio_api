@@ -1,7 +1,7 @@
 # midias/midia_model.py
 
-from sqlalchemy import Column, Integer, String
-from pydantic import BaseModel, EmailStr, Field
+from sqlalchemy import Column, Integer, String, Float
+from pydantic import BaseModel, Field
 from database import Base # Importa a Base que criamos
 
 # ==================================
@@ -13,34 +13,46 @@ class Midia(Base):
 
     # Colunas da tabela
     id = Column(Integer, primary_key=True, index=True)
-    email = Column(String, unique=True, index=True) # E-mail deve ser único
-    hashed_password = Column(String) # Armazenaremos a senha "hasheada"
-    full_name = Column(String, index=True, nullable=True) # Nome pode ser nulo
-    image = Column(String, nullable=True)  # Campo para armazenar URL/data URI da imagem
+    titulo = Column(String, index=True, nullable=False)  # Título da mídia
+    tipo = Column(String, nullable=False)  # Tipo: Jogo, Filme, Série, Livro, etc.
+    genero = Column(String, nullable=True)  # Gênero: Action/Adventure, RPG, etc.
+    ano = Column(Integer, nullable=True)  # Ano de lançamento
+    status = Column(String, nullable=True)  # Status: Zerado, Em andamento, Pausado, etc.
+    avaliacao = Column(Float, nullable=True)  # Avaliação de 0 a 5
+    capa = Column(String, nullable=True)  # Caminho ou URL da imagem de capa
 
 # ==================================
 # SCHEMAS (Pydantic) - O CONTRATO DA API
 # ==================================
 # Estes schemas definem como os dados são recebidos e enviados pela API.
 
-# Schema para os dados que o cliente envia ao CRIAR um usuário
+# Schema para os dados que o cliente envia ao CRIAR uma mídia
 class MidiaCreate(BaseModel):
-    email: EmailStr  # Valida o formato do e-mail
-    password: str = Field(min_length=8)
-    full_name: str | None = Field(default=None, min_length=3)
-    image: str | None = None
+    titulo: str = Field(min_length=1)  # Título obrigatório
+    tipo: str = Field(min_length=1)  # Tipo obrigatório (Jogo, Filme, Série, etc.)
+    genero: str | None = None  # Gênero opcional
+    ano: int | None = Field(default=None, ge=1800, le=2100)  # Ano entre 1800 e 2100
+    status: str | None = None  # Status opcional (Zerado, Em andamento, etc.)
+    avaliacao: float | None = Field(default=None, ge=0, le=5)  # Avaliação de 0 a 5
+    capa: str | None = None  # Caminho ou URL da imagem de capa
 
-# Schema para os dados que o cliente envia ao ATUALIZAR um usuário
+# Schema para os dados que o cliente envia ao ATUALIZAR uma mídia
 class MidiaUpdate(BaseModel):
-    email: EmailStr | None = None
-    password: str | None = Field(default=None, min_length=8)
-    full_name: str | None = Field(default=None, min_length=3)
-    image: str | None = None
+    titulo: str | None = Field(default=None, min_length=1)
+    tipo: str | None = Field(default=None, min_length=1)
+    genero: str | None = None
+    ano: int | None = Field(default=None, ge=1800, le=2100)
+    status: str | None = None
+    avaliacao: float | None = Field(default=None, ge=0, le=5)
+    capa: str | None = None
 
 # Schema para os dados que a API RETORNA ao cliente (público)
-# NUNCA inclua a senha ou outros dados sensíveis aqui!
 class MidiaPublic(BaseModel):
     id: int
-    email: EmailStr
-    full_name: str | None = None
-    image: str | None = None
+    titulo: str
+    tipo: str
+    genero: str | None = None
+    ano: int | None = None
+    status: str | None = None
+    avaliacao: float | None = None
+    capa: str | None = None

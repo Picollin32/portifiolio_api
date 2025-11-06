@@ -15,6 +15,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from users import user_controller
 from roles import role_controller
 from auth import auth_controller
+from midias import midia_controller
 from database import db_manager, APP_PROFILE
 
 # Inicializa as tabelas no banco de dados usando o Singleton DatabaseManager
@@ -61,6 +62,7 @@ else:
 app.include_router(user_controller.router)
 app.include_router(role_controller.router)
 app.include_router(auth_controller.router)
+app.include_router(midia_controller.router)
 
 
 # ==================================

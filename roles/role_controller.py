@@ -20,3 +20,15 @@ def create_role(role: role_model.RoleCreate, db: Session = Depends(get_db)):
 def list_roles(db: Session = Depends(get_db)):
     """Lista todos os perfis (apenas para administradores)."""
     return role_service.get_all(db)
+
+@router.put("/{role_id}", response_model=role_model.RolePublic,
+            dependencies=[Depends(require_role("admin"))])
+def update_role(role_id: int, role: role_model.RoleCreate, db: Session = Depends(get_db)):
+    """Atualiza um perfil existente (apenas para administradores)."""
+    return role_service.update_role(db=db, role_id=role_id, role=role)
+
+@router.delete("/{role_id}", response_model=role_model.RolePublic,
+               dependencies=[Depends(require_role("admin"))])
+def delete_role(role_id: int, db: Session = Depends(get_db)):
+    """Deleta um perfil existente (apenas para administradores)."""
+    return role_service.delete_role(db=db, role_id=role_id)

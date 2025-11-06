@@ -1,6 +1,6 @@
 # roles/role_model.py
 from sqlalchemy import Column, Integer, String
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 from database import Base
 
 # Modelo da Tabela SQLAlchemy
@@ -11,7 +11,7 @@ class Role(Base):
 
 # Schema Pydantic para criar/atualizar um Role
 class RoleCreate(BaseModel):
-    name: str
+    name: str = Field(min_length=3, description="Nome do perfil (mínimo 3 caracteres)")
 
 # Schema Pydantic para dados públicos
 class RolePublic(BaseModel):
