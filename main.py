@@ -38,8 +38,8 @@ if APP_PROFILE == "PROD":
     app.add_middleware(
         CORSMiddleware,
         allow_origins=[
-            "https://portifolio-front.onrender.com",
-            "https://portifolio-front.onrender.com/",
+            "https://portifolio-front-docker.onrender.com",
+            "https://portifolio-front-docker.onrender.com/",
         ],
         allow_credentials=True,
         allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
