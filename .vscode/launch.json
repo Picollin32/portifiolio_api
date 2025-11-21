@@ -18,8 +18,8 @@
                 "APP_PROFILE": "DEV"
             },
             "console": "integratedTerminal",
-            "cwd": "d:/Projetos/portifiolio_api",
-            "python": "C:/Users/brank/AppData/Local/Packages/PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0/LocalCache/Local/pypoetry/Cache/virtualenvs/portifiolio-api-5VRVLFZW-py3.11/Scripts/python.exe"
+            "cwd": "d:/Projetos/portfolio_api",
+            "python": "C:/Users/brank/AppData/Local/Packages/PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0/LocalCache/Local/pypoetry/Cache/virtualenvs/portfolio-api-5VRVLFZW-py3.11/Scripts/python.exe"
         },
         {
             "name": "Flutter: Run Web",
@@ -49,8 +49,8 @@
                 "APP_PROFILE": "PROD"
             },
             "console": "integratedTerminal",
-            "cwd": "d:/Projetos/portifiolio_api",
-            "python": "C:/Users/brank/AppData/Local/Packages/PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0/LocalCache/Local/pypoetry/Cache/virtualenvs/portifiolio-api-5VRVLFZW-py3.11/Scripts/python.exe"
+            "cwd": "d:/Projetos/portfolio_api",
+            "python": "C:/Users/brank/AppData/Local/Packages/PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0/LocalCache/Local/pypoetry/Cache/virtualenvs/portfolio-api-5VRVLFZW-py3.11/Scripts/python.exe"
         },
         {
             "name": "Python: Current File",
@@ -62,34 +62,34 @@
             "env": {
                 "APP_PROFILE": "DEV"
             },
-            "cwd": "d:/Projetos/portifiolio_api",
-            "python": "C:/Users/brank/AppData/Local/Packages/PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0/LocalCache/Local/pypoetry/Cache/virtualenvs/portifiolio-api-5VRVLFZW-py3.11/Scripts/python.exe"
+            "cwd": "d:/Projetos/portfolio_api",
+            "python": "C:/Users/brank/AppData/Local/Packages/PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0/LocalCache/Local/pypoetry/Cache/virtualenvs/portfolio-api-5VRVLFZW-py3.11/Scripts/python.exe"
         },
         {
             "name": "Python: Initialize Database",
             "type": "debugpy",
             "request": "launch",
-            "program": "d:/Projetos/portifiolio_api/init_db.py",
+            "program": "d:/Projetos/portfolio_api/init_db.py",
             "console": "integratedTerminal",
             "justMyCode": false,
             "env": {
                 "APP_PROFILE": "DEV"
             },
-            "cwd": "d:/Projetos/portifiolio_api",
-            "python": "C:/Users/brank/AppData/Local/Packages/PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0/LocalCache/Local/pypoetry/Cache/virtualenvs/portifiolio-api-5VRVLFZW-py3.11/Scripts/python.exe"
+            "cwd": "d:/Projetos/portfolio_api",
+            "python": "C:/Users/brank/AppData/Local/Packages/PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0/LocalCache/Local/pypoetry/Cache/virtualenvs/portfolio-api-5VRVLFZW-py3.11/Scripts/python.exe"
         },
         {
             "name": "Python: Demo Patterns",
             "type": "debugpy",
             "request": "launch",
-            "program": "d:/Projetos/portifiolio_api/demo_patterns.py",
+            "program": "d:/Projetos/portfolio_api/demo_patterns.py",
             "console": "integratedTerminal",
             "justMyCode": false,
             "env": {
                 "APP_PROFILE": "DEV"
             },
-            "cwd": "d:/Projetos/portifiolio_api",
-            "python": "C:/Users/brank/AppData/Local/Packages/PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0/LocalCache/Local/pypoetry/Cache/virtualenvs/portifiolio-api-5VRVLFZW-py3.11/Scripts/python.exe"
+            "cwd": "d:/Projetos/portfolio_api",
+            "python": "C:/Users/brank/AppData/Local/Packages/PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0/LocalCache/Local/pypoetry/Cache/virtualenvs/portfolio-api-5VRVLFZW-py3.11/Scripts/python.exe"
         }
     ],
     "compounds": [
