@@ -25,8 +25,8 @@
             "name": "Flutter: Run Web",
             "type": "dart",
             "request": "launch",
-            "program": "d:/Projetos/portifolio_front/lib/main.dart",
-            "cwd": "d:/Projetos/portifolio_front",
+            "program": "d:/Projetos/portfolio_front/lib/main.dart",
+            "cwd": "d:/Projetos/portfolio_front",
             "args": [
                 "-d",
                 "chrome"

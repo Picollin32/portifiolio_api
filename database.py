@@ -37,7 +37,7 @@ class DatabaseManager:
             app_profile = os.getenv("APP_PROFILE", "DEV")
             
             if app_profile == "DEV":
-                database_url = "postgresql://postgres:123456@localhost/portifolio_db"
+                database_url = "postgresql://postgres:123456@localhost/portfolio_db"
             else:
                 database_url = os.getenv("DATABASE_URL")
             
