@@ -38,15 +38,22 @@ class DatabaseManager:
             
             if app_profile == "DEV":
                 database_url = "postgresql://postgres:123456@localhost/portfolio_db"
+                connect_args = {}
             else:
                 database_url = os.getenv("DATABASE_URL")
+                # Configuração SSL necessária para Render PostgreSQL
+                connect_args = {
+                    "sslmode": "require",
+                    "connect_timeout": 10
+                }
             
             # Cria a engine do SQLAlchemy (ponto de entrada para o banco)
             self._engine = create_engine(
                 database_url,
                 pool_pre_ping=True,  # Verifica conexões antes de usar
                 pool_size=5,         # Número de conexões no pool
-                max_overflow=10      # Conexões extras permitidas
+                max_overflow=10,     # Conexões extras permitidas
+                connect_args=connect_args  # Parâmetros SSL para produção
             )
             
             # Cria a fábrica de sessões
