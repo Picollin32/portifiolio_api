@@ -41,6 +41,7 @@ STATUS_POR_TIPO = {
         "Pausado",
         "Abandonado",
         "Quero jogar",
+        "Favorito",
     ],
     "Filme": [
         "Assistido",
@@ -55,6 +56,7 @@ STATUS_POR_TIPO = {
         "Abandonada",
         "Completa",
         "Quero assistir",
+        "Favorita",
     ],
     "Livro": [
         "Lido",

@@ -13,10 +13,27 @@ from sqlalchemy.orm import Session
 from fastapi import APIRouter, Depends, status
 from typing import List
 from database import get_db
-from auth.dependencies import get_current_admin_user
+from auth.dependencies import get_current_admin_user, get_current_user
 from . import user_service, user_model
 
 router = APIRouter(prefix="/users", tags=["Users"])
+
+
+@router.get(
+    "/me",
+    response_model=user_model.UserPublic,
+    summary="Buscar dados do usuário autenticado",
+    description="Retorna os dados do usuário atualmente autenticado."
+)
+def read_current_user(
+    current_user = Depends(get_current_user)
+) -> user_model.UserPublic:
+    """
+    Busca os dados do usuário autenticado.
+    
+    **Permissão necessária**: Usuário autenticado
+    """
+    return current_user
 
 
 @router.post(
