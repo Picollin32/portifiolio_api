@@ -1,6 +1,7 @@
 # midias/midia_model.py
 
-from sqlalchemy import Column, Integer, String, Float
+from sqlalchemy import Column, Integer, String, Float, ForeignKey
+from sqlalchemy.orm import relationship
 from pydantic import BaseModel, Field
 from database import Base # Importa a Base que criamos
 
@@ -20,6 +21,10 @@ class Midia(Base):
     status = Column(String, nullable=True)  # Status: Zerado, Em andamento, Pausado, etc.
     avaliacao = Column(Float, nullable=True)  # Avaliação de 0 a 5
     capa = Column(String, nullable=True)  # Caminho ou URL da imagem de capa
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)  # Proprietário da mídia
+    
+    # Relacionamento com User
+    user = relationship("User", lazy="joined")
 
 # ==================================
 # SCHEMAS (Pydantic) - O CONTRATO DA API
@@ -56,3 +61,4 @@ class MidiaPublic(BaseModel):
     status: str | None = None
     avaliacao: float | None = None
     capa: str | None = None
+    user_id: int  # ID do proprietário da mídia

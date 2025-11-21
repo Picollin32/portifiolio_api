@@ -231,24 +231,4 @@ def get_generos_por_tipo(tipo: str):
     return GENEROS_COMUNS.get(tipo, []).copy()
 
 
-if __name__ == "__main__":
-    print("📚 TIPOS DE MÍDIA SUPORTADOS:")
-    print("-" * 50)
-    for tipo in TIPOS_MIDIA:
-        print(f"  • {tipo}")
-    
-    print("\n📊 STATUS POR TIPO:")
-    print("-" * 50)
-    for tipo, status_list in STATUS_POR_TIPO.items():
-        print(f"\n{tipo}:")
-        for status in status_list:
-            print(f"  • {status}")
-    
-    print("\n🎨 GÊNEROS COMUNS:")
-    print("-" * 50)
-    for tipo, generos in GENEROS_COMUNS.items():
-        print(f"\n{tipo}:")
-        for genero in generos[:5]:  # Mostra apenas os 5 primeiros
-            print(f"  • {genero}")
-        if len(generos) > 5:
-            print(f"  ... e mais {len(generos) - 5}")
+
