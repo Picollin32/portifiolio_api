@@ -41,10 +41,13 @@ class DatabaseManager:
                 connect_args = {}
             else:
                 database_url = os.getenv("DATABASE_URL")
+                # Render fornece URL com postgres://, mas SQLAlchemy exige postgresql://
+                if database_url.startswith("postgres://"):
+                    database_url = database_url.replace("postgres://", "postgresql://", 1)
+                
                 # Configuração SSL necessária para Render PostgreSQL
                 connect_args = {
-                    "sslmode": "require",
-                    "connect_timeout": 10
+                    "sslmode": "require"
                 }
             
             # Cria a engine do SQLAlchemy (ponto de entrada para o banco)
